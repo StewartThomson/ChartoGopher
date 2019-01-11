@@ -29,7 +29,7 @@ type Track struct {
 	Notes      []note
 }
 
-func (t Track) header() string {
+func (t Track) Header() string {
 	return string(t.Difficulty) + string(t.Instrument)
 }
 

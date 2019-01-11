@@ -1,5 +1,7 @@
 package ChartoGopher
 
+import "sync"
+
 type Chart interface {
 	AddTimeSignatureChange(numerator int, denominator int, position int)
 
@@ -10,6 +12,10 @@ type Chart interface {
 	Write(writer Writer) (err error)
 
 	GetSongInfoMap() (info map[string]interface{})
+
+	GetTracks() []Track
+
+	GetSyncProperties() (properties []SyncProperty)
 }
 
 type SongInfo struct {
@@ -135,4 +141,37 @@ func (c *chart) GetSongInfoMap() (info map[string]interface{}) {
 		info["MediaType"] = songInfo.MediaType
 	}
 	return
+}
+
+func (c *chart) GetSyncProperties() (properties []SyncProperty) {
+	properties = make([]SyncProperty, 0)
+	ch := make(chan SyncProperty)
+	var wg sync.WaitGroup
+	wg.Add(2)
+	go func() {
+		wg.Wait()
+		close(ch)
+	}()
+
+	go func() {
+		defer wg.Done()
+		for _, v := range c.SyncTrack.Tempos {
+			ch <- v
+		}
+	}()
+	go func() {
+		defer wg.Done()
+		for _, v := range c.SyncTrack.TimeSignatures {
+			ch <- v
+		}
+	}()
+
+	for prop := range ch {
+		properties = append(properties, prop)
+	}
+	return
+}
+
+func (c *chart) GetTracks() []Track {
+	return c.Tracks
 }

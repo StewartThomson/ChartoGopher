@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-type syncProperty interface {
+type SyncProperty interface {
 	//Type of sync property
 	Key() string
 
@@ -28,10 +28,6 @@ type timeSignature struct {
 type tempo struct {
 	Bpm      int
 	Position int
-}
-
-func (syncTrack) Header() string {
-	return "syncTrack"
 }
 
 func (tempo) Key() string {
