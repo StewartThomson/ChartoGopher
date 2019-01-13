@@ -48,7 +48,7 @@ func (timeSignature) Key() string {
 
 func validateDenominator(denominator int, position int) {
 	//Must be greater than 0, less than or equal to 64, and a power of 2
-	if denominator <= 0 || denominator > 64 || !(denominator&(denominator) == 0) {
+	if denominator <= 0 || denominator > 64 || denominator&(denominator-1) != 0 {
 		panic("invalid time signature denominator at position " + strconv.Itoa(position))
 	}
 }

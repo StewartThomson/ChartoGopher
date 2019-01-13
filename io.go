@@ -3,9 +3,9 @@ package ChartoGopher
 import "io"
 
 type Writer interface {
-	write(chart) (int, error)
+	Write(Chart) (int, error)
 }
 
 type Reader interface {
-	read(io.Reader)
+	read(io.Reader) Chart
 }

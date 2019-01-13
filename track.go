@@ -4,7 +4,7 @@ type Instrument string
 
 //Instrument names
 const (
-	INSTR_GUITAR       Instrument = "single"
+	INSTR_GUITAR       Instrument = "Single"
 	INSTR_GUITARCOOP   Instrument = "DoubleGuitar"
 	INSTR_BASS         Instrument = "DoubleBass"
 	INSTR_RHYTHM       Instrument = "DoubleRhythm"
@@ -33,7 +33,7 @@ func (t Track) Header() string {
 	return string(t.Difficulty) + string(t.Instrument)
 }
 
-func CreateTrack(difficulty Difficulty, instrument Instrument) *Track {
+func NewTrack(difficulty Difficulty, instrument Instrument) *Track {
 	return &Track{
 		Difficulty: difficulty,
 		Instrument: instrument,
@@ -41,7 +41,7 @@ func CreateTrack(difficulty Difficulty, instrument Instrument) *Track {
 	}
 }
 
-func (t *Track) AddNote(time int, colour int, duration int, hopo bool) {
+func (t *Track) AddNote(time int, colour Button, duration int, hopo bool) {
 	t.Notes = append(t.Notes, note{
 		Time:     time,
 		Colour:   colour,

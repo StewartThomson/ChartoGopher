@@ -24,7 +24,7 @@ func New(output io.Writer) *chartWriter {
 	}
 }
 
-func (w *chartWriter) write(chart cg.Chart) (int, error) {
+func (w *chartWriter) Write(chart cg.Chart) (int, error) {
 	tracks := chart.GetTracks()
 
 	ch := make(chan string)
@@ -43,7 +43,11 @@ func (w *chartWriter) write(chart cg.Chart) (int, error) {
 
 		songInfo := chart.GetSongInfoMap()
 		for k, v := range songInfo {
-			songBlock += TAB + fmt.Sprintf("%s = %v", k, v) + LINE_ENDING
+			if _, ok := v.(string); ok {
+				songBlock += TAB + fmt.Sprintf("%s = \"%v\"", k, v) + LINE_ENDING
+			} else {
+				songBlock += TAB + fmt.Sprintf("%s = %v", k, v) + LINE_ENDING
+			}
 		}
 		songBlock += END_BRACKET
 		ch <- songBlock
@@ -70,13 +74,12 @@ func (w *chartWriter) write(chart cg.Chart) (int, error) {
 			}
 
 			trackBlock += END_BRACKET
+			ch <- trackBlock
 		}()
 	}
-
-	go func() {
-		defer wg.Done()
-		close(ch)
-	}()
+	//Temporary
+	wg.Done()
+	output += "[Events]" + LINE_ENDING + START_BRACKET + END_BRACKET
 
 	for block := range ch {
 		output += block

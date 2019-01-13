@@ -5,15 +5,15 @@ import "sync"
 type Chart interface {
 	AddTimeSignatureChange(numerator int, denominator int, position int)
 
-	AddTempChange(bpm int, position int)
+	AddTempoChange(bpm int, position int)
 
-	AddTrack(track Track)
+	AddTrack(track *Track)
 
-	Write(writer Writer) (err error)
+	Write(writer Writer) (int, error)
 
 	GetSongInfoMap() (info map[string]interface{})
 
-	GetTracks() []Track
+	GetTracks() []*Track
 
 	GetSyncProperties() (properties []SyncProperty)
 }
@@ -42,10 +42,10 @@ type SongInfo struct {
 type chart struct {
 	SongInfo  SongInfo
 	SyncTrack syncTrack
-	Tracks    []Track
+	Tracks    []*Track
 }
 
-func InitializeChart(songInfo SongInfo, bpm int, timeSigNumerator int, timeSigDenominator int) *chart {
+func NewChart(songInfo SongInfo, bpm int, timeSigNumerator int, timeSigDenominator int) *chart {
 	validateDenominator(timeSigDenominator, 0)
 	timeSig := []timeSignature{
 		{
@@ -61,7 +61,7 @@ func InitializeChart(songInfo SongInfo, bpm int, timeSigNumerator int, timeSigDe
 		},
 	}
 	return &chart{
-		Tracks:   make([]Track, 0),
+		Tracks:   make([]*Track, 0),
 		SongInfo: songInfo,
 		SyncTrack: syncTrack{
 			TimeSignatures: timeSig,
@@ -71,39 +71,39 @@ func InitializeChart(songInfo SongInfo, bpm int, timeSigNumerator int, timeSigDe
 
 }
 
-func (s *syncTrack) AddTimeSignatureChange(numerator int, denominator int, position int) {
-	s.TimeSignatures = append(s.TimeSignatures, timeSignature{
+func (c *chart) AddTimeSignatureChange(numerator int, denominator int, position int) {
+	c.SyncTrack.TimeSignatures = append(c.SyncTrack.TimeSignatures, timeSignature{
 		Numerator:   numerator,
 		Denominator: denominator,
 		Position:    position,
 	})
 }
 
-func (s *syncTrack) AddTempoChange(bpm int, position int) {
-	s.Tempos = append(s.Tempos, tempo{
+func (c *chart) AddTempoChange(bpm int, position int) {
+	c.SyncTrack.Tempos = append(c.SyncTrack.Tempos, tempo{
 		Bpm:      bpm,
 		Position: position,
 	})
 }
 
-func (c *chart) AddTrack(track Track) {
+func (c *chart) AddTrack(track *Track) {
 	c.Tracks = append(c.Tracks, track)
 }
 
 func (c *chart) Write(writer Writer) (int, error) {
 	c.setDefaults()
 
-	return writer.write(*c)
+	return writer.Write(c)
 }
 
 func (c *chart) setDefaults() {
-	info := c.SongInfo
-	if info.SongName == "" {
-
+	info := &c.SongInfo
+	info.Resolution = 192
+	if info.Resolution == 0 {
 	}
 }
 
-func (c *chart) GetSongInfoMap() (info map[string]interface{}) {
+func (c chart) GetSongInfoMap() (info map[string]interface{}) {
 	songInfo := c.SongInfo
 	info = map[string]interface{}{
 		"Offset":       songInfo.Offset,
@@ -140,10 +140,13 @@ func (c *chart) GetSongInfoMap() (info map[string]interface{}) {
 	if songInfo.MediaType != "" {
 		info["MediaType"] = songInfo.MediaType
 	}
+	if songInfo.MusicStream != "" {
+		info["MusicStream"] = songInfo.MusicStream
+	}
 	return
 }
 
-func (c *chart) GetSyncProperties() (properties []SyncProperty) {
+func (c chart) GetSyncProperties() (properties []SyncProperty) {
 	properties = make([]SyncProperty, 0)
 	ch := make(chan SyncProperty)
 	var wg sync.WaitGroup
@@ -172,6 +175,6 @@ func (c *chart) GetSyncProperties() (properties []SyncProperty) {
 	return
 }
 
-func (c *chart) GetTracks() []Track {
+func (c chart) GetTracks() []*Track {
 	return c.Tracks
 }

@@ -2,18 +2,20 @@ package ChartoGopher
 
 type note struct {
 	Time     int
-	Colour   int
+	Colour   Button
 	Duration int
 	//Hammer on / pull off
 	Hopo bool
 }
 
+type Button int
+
 //Keys
 const (
-	GREEN  = 0
-	RED    = 1
-	YELLOW = 2
-	BLUE   = 3
-	ORANGE = 4
-	OPEN   = 7
+	GREEN  Button = 0
+	RED    Button = 1
+	YELLOW Button = 2
+	BLUE   Button = 3
+	ORANGE Button = 4
+	OPEN   Button = 7
 )
