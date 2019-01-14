@@ -1,6 +1,9 @@
 package ChartoGopher
 
-import "sync"
+import (
+	"fmt"
+	"sync"
+)
 
 type Chart interface {
 	AddTimeSignatureChange(numerator int, denominator int, position int)
@@ -16,6 +19,8 @@ type Chart interface {
 	GetTracks() []*Track
 
 	GetSyncProperties() (properties []SyncProperty)
+
+	GetEvents() []event
 }
 
 type SongInfo struct {
@@ -43,6 +48,7 @@ type chart struct {
 	SongInfo  SongInfo
 	SyncTrack syncTrack
 	Tracks    []*Track
+	Events    []event
 }
 
 func NewChart(songInfo SongInfo, bpm int, timeSigNumerator int, timeSigDenominator int) *chart {
@@ -62,6 +68,7 @@ func NewChart(songInfo SongInfo, bpm int, timeSigNumerator int, timeSigDenominat
 	}
 	return &chart{
 		Tracks:   make([]*Track, 0),
+		Events:   make([]event, 0),
 		SongInfo: songInfo,
 		SyncTrack: syncTrack{
 			TimeSignatures: timeSig,
@@ -98,8 +105,8 @@ func (c *chart) Write(writer Writer) (int, error) {
 
 func (c *chart) setDefaults() {
 	info := &c.SongInfo
-	info.Resolution = 192
 	if info.Resolution == 0 {
+		info.Resolution = 192
 	}
 }
 
@@ -177,4 +184,16 @@ func (c chart) GetSyncProperties() (properties []SyncProperty) {
 
 func (c chart) GetTracks() []*Track {
 	return c.Tracks
+}
+
+func (c *chart) AddEvent(time int, eventType EventType, comments ...string) {
+	c.Events = append(c.Events, event{
+		Time:    time,
+		Event:   eventType,
+		Comment: fmt.Sprint(comments),
+	})
+}
+
+func (c chart) GetEvents() []event {
+	return c.Events
 }

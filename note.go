@@ -4,8 +4,7 @@ type note struct {
 	Time     int
 	Colour   Button
 	Duration int
-	//Hammer on / pull off
-	Hopo bool
+	NoteChar starPowerChar
 }
 
 type Button int
@@ -18,4 +17,14 @@ const (
 	BLUE   Button = 3
 	ORANGE Button = 4
 	OPEN   Button = 7
+
+	CANCEL_HAMMER_ON Button = 5
+	HAMMER_ON_BTN    Button = 2
+)
+
+type starPowerChar string
+
+const (
+	SP_FALSE starPowerChar = "N"
+	SP_TRUE  starPowerChar = "S"
 )

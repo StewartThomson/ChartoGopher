@@ -65,21 +65,34 @@ func (w *chartWriter) Write(chart cg.Chart) (int, error) {
 	}()
 
 	for _, track := range tracks {
-		go func() {
+		go func(track cg.Track) {
 			defer wg.Done()
 			trackBlock := "[" + track.Header() + "]" + LINE_ENDING + START_BRACKET
 
 			for _, note := range track.Notes {
-				trackBlock += TAB + fmt.Sprintf("%d = N %d %d", note.Time, note.Colour, note.Duration) + LINE_ENDING
+				trackBlock += TAB + fmt.Sprintf("%d = %s %d %d", note.Time, note.NoteChar, note.Colour, note.Duration) + LINE_ENDING
 			}
 
 			trackBlock += END_BRACKET
 			ch <- trackBlock
-		}()
+		}(*track)
 	}
-	//Temporary
-	wg.Done()
-	output += "[Events]" + LINE_ENDING + START_BRACKET + END_BRACKET
+
+	events := chart.GetEvents()
+
+	go func() {
+		defer wg.Done()
+		eventBlock := "[Events]" + LINE_ENDING + START_BRACKET
+		for _, event := range events {
+			eventString := string(event.Event)
+			if event.Comment != "" {
+				eventString += " " + event.Comment
+			}
+			eventBlock += TAB + fmt.Sprintf("%d = E \"%s\"", event.Time, eventString) + LINE_ENDING
+		}
+		eventBlock += END_BRACKET
+		ch <- eventBlock
+	}()
 
 	for block := range ch {
 		output += block

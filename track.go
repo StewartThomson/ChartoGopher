@@ -46,6 +46,24 @@ func (t *Track) AddNote(time int, colour Button, duration int, hopo bool) {
 		Time:     time,
 		Colour:   colour,
 		Duration: duration,
-		Hopo:     hopo,
+		NoteChar: SP_FALSE,
+	})
+
+	if !hopo {
+		t.Notes = append(t.Notes, note{
+			Time:     time,
+			Colour:   CANCEL_HAMMER_ON,
+			Duration: 0,
+			NoteChar: SP_FALSE,
+		})
+	}
+}
+
+func (t *Track) AddStarPowerPhrase(time int, duration int) {
+	t.Notes = append(t.Notes, note{
+		Time:     time,
+		Colour:   HAMMER_ON_BTN,
+		Duration: duration,
+		NoteChar: SP_TRUE,
 	})
 }
