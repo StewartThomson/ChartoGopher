@@ -19,7 +19,7 @@ const (
 	OPEN   Button = 7
 
 	CANCEL_HAMMER_ON Button = 5
-	HAMMER_ON_BTN    Button = 2
+	SP_BTN           Button = 2
 )
 
 type starPowerChar string

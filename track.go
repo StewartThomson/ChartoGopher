@@ -62,7 +62,7 @@ func (t *Track) AddNote(time int, colour Button, duration int, hopo bool) {
 func (t *Track) AddStarPowerPhrase(time int, duration int) {
 	t.Notes = append(t.Notes, note{
 		Time:     time,
-		Colour:   HAMMER_ON_BTN,
+		Colour:   SP_BTN,
 		Duration: duration,
 		NoteChar: SP_TRUE,
 	})
