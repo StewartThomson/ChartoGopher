@@ -11,15 +11,16 @@ type Button int
 
 //Keys
 const (
-	GREEN  Button = 0
-	RED    Button = 1
-	YELLOW Button = 2
-	BLUE   Button = 3
-	ORANGE Button = 4
-	OPEN   Button = 7
+	BTN_GREEN  Button = 0
+	BTN_RED    Button = 1
+	BTN_YELLOW Button = 2
+	BTN_BLUE   Button = 3
+	BTN_ORANGE Button = 4
+	BTN_OPEN   Button = 7
 
-	CANCEL_HAMMER_ON Button = 5
 	SP_BTN           Button = 2
+	CANCEL_HAMMER_ON Button = 5
+	TAP              Button = 6
 )
 
 type starPowerChar string

@@ -41,7 +41,7 @@ func NewTrack(difficulty Difficulty, instrument Instrument) *Track {
 	}
 }
 
-func (t *Track) AddNote(time int, colour Button, duration int, hopo bool) {
+func (t *Track) AddNote(time int, colour Button, duration int, hopo bool, tap bool) {
 	t.Notes = append(t.Notes, note{
 		Time:     time,
 		Colour:   colour,
@@ -49,13 +49,21 @@ func (t *Track) AddNote(time int, colour Button, duration int, hopo bool) {
 		NoteChar: SP_FALSE,
 	})
 
-	if !hopo {
+	if !hopo || tap {
 		t.Notes = append(t.Notes, note{
 			Time:     time,
 			Colour:   CANCEL_HAMMER_ON,
 			Duration: 0,
 			NoteChar: SP_FALSE,
 		})
+		if tap {
+			t.Notes = append(t.Notes, note{
+				Time:     time,
+				Colour:   TAP,
+				Duration: 0,
+				NoteChar: SP_FALSE,
+			})
+		}
 	}
 }
 
