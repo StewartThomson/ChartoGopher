@@ -9,7 +9,7 @@ type event struct {
 type EventType string
 
 const (
-	EVENT_EVENT_PHRASE_START  EventType = "phrase_start"
+	EVENT_PHRASE_START        EventType = "phrase_start"
 	EVENT_PHRASE_END          EventType = "phrase_end"
 	EVENT_LYRIC               EventType = "lyric"
 	EVENT_IDLE                EventType = "idle"

@@ -1,6 +1,7 @@
 package ChartoGopher
 
 import (
+	"fmt"
 	"math"
 	"strconv"
 )
@@ -46,11 +47,12 @@ func (timeSignature) Key() string {
 	return "TS"
 }
 
-func validateDenominator(denominator int, position int) {
+func validateDenominator(denominator int, position int) error {
 	//Must be greater than 0, less than or equal to 64, and a power of 2
 	if denominator <= 0 || denominator > 64 || denominator&(denominator-1) != 0 {
-		panic("invalid time signature denominator at position " + strconv.Itoa(position))
+		return fmt.Errorf("invalid time signature denominator %d at position %d", denominator, position)
 	}
+	return nil
 }
 
 func (t timeSignature) Value() (out string) {
@@ -59,9 +61,6 @@ func (t timeSignature) Value() (out string) {
 	if t.Denominator == 4 {
 		return
 	}
-
-	validateDenominator(t.Denominator, t.Position)
-
 	out += " " + strconv.FormatFloat(math.Log2(float64(t.Denominator)), 'f', 0, 64)
 
 	return

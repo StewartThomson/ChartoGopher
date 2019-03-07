@@ -50,12 +50,12 @@ func (t *Track) AddNote(time int, colour Button, duration int, hopo bool, tap bo
 	})
 
 	if !hopo || tap {
-		t.Notes = append(t.Notes, note{
-			Time:     time,
-			Colour:   CANCEL_HAMMER_ON,
-			Duration: 0,
-			NoteChar: SP_FALSE,
-		})
+		//t.Notes = append(t.Notes, note{
+		//	Time:     time,
+		//	Colour:   CANCEL_HAMMER_ON,
+		//	Duration: 0,
+		//	NoteChar: SP_FALSE,
+		//})
 		if tap {
 			t.Notes = append(t.Notes, note{
 				Time:     time,

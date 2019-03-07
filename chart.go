@@ -51,8 +51,8 @@ type chart struct {
 	Events    []event
 }
 
-func NewChart(songInfo SongInfo, bpm int, timeSigNumerator int, timeSigDenominator int) *chart {
-	validateDenominator(timeSigDenominator, 0)
+func NewChart(songInfo SongInfo, bpm int, timeSigNumerator int, timeSigDenominator int) (*chart, error) {
+	err := validateDenominator(timeSigDenominator, 0)
 	timeSig := []timeSignature{
 		{
 			Numerator:   timeSigNumerator,
@@ -74,8 +74,7 @@ func NewChart(songInfo SongInfo, bpm int, timeSigNumerator int, timeSigDenominat
 			TimeSignatures: timeSig,
 			Tempos:         tempo,
 		},
-	}
-
+	}, err
 }
 
 func (c *chart) AddTimeSignatureChange(numerator int, denominator int, position int) {
