@@ -79,6 +79,9 @@ func NewChart(songInfo SongInfo, bpm int, timeSigNumerator int, timeSigDenominat
 
 func (c *chart) AddTimeSignatureChange(numerator int, denominator int, position int) (err error) {
 	err = validateDenominator(denominator, position)
+	if err != nil {
+		return
+	}
 	c.SyncTrack.TimeSignatures = append(c.SyncTrack.TimeSignatures, timeSignature{
 		Numerator:   numerator,
 		Denominator: denominator,
