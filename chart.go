@@ -6,7 +6,7 @@ import (
 )
 
 type Chart interface {
-	AddTimeSignatureChange(numerator int, denominator int, position int)
+	AddTimeSignatureChange(numerator int, denominator int, position int) error
 
 	AddTempoChange(bpm int, position int)
 
@@ -77,7 +77,8 @@ func NewChart(songInfo SongInfo, bpm int, timeSigNumerator int, timeSigDenominat
 	}, err
 }
 
-func (c *chart) AddTimeSignatureChange(numerator int, denominator int, position int) {
+func (c *chart) AddTimeSignatureChange(numerator int, denominator int, position int) (err error) {
+	err = validateDenominator(denominator, position)
 	c.SyncTrack.TimeSignatures = append(c.SyncTrack.TimeSignatures, timeSignature{
 		Numerator:   numerator,
 		Denominator: denominator,
