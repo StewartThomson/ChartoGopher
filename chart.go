@@ -87,6 +87,7 @@ func (c *chart) AddTimeSignatureChange(numerator int, denominator int, position 
 		Denominator: denominator,
 		Position:    position,
 	})
+	return
 }
 
 func (c *chart) AddTempoChange(bpm int, position int) {
